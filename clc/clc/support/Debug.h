@@ -67,6 +67,6 @@ public:
 
 #endif
 
-#define UNUSED(x) (void)(sizeof((x), 0))
+#define UNUSED(x) (void)(sizeof((x)))
 
 #endif

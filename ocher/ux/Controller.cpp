@@ -38,7 +38,7 @@ UxController::UxController() :
 	m_powerSaver = g_container.powerSaver;
 
 	m_filesystem->dirChanged.Connect(this, &UxController::onDirChanged);
-	m_filesystem->initWatches();
+	m_filesystem->initWatches(g_container.options);
 
 	m_loop->appEvent.Connect(this, &UxController::onAppEvent);
 	m_powerSaver->wantToSleep.Connect(this, &UxController::onWantToSleep);

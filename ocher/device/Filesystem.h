@@ -11,7 +11,7 @@
 #include "Signals/Signal.h"
 using namespace Gallant;
 
-class Settings;
+class Options;
 
 /**
  * Represents the interesting points of the filesystem (namely, where the books exist, and where
@@ -25,15 +25,11 @@ public:
 	Filesystem();
 	~Filesystem();
 
-	/** Once settings are injected, the filesystem begins watching for changes.
-	 */
-	void inject(Settings* settings);
-
 	const char** m_libraries;
 	char* m_home;
 	char* m_settings;
 
-	void initWatches();
+	void initWatches(Options* options);
 	void deinitWatches();
 	void fireEvents();
 	Signal2<const char*, const char*> dirChanged;

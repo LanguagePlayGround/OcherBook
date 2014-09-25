@@ -1532,7 +1532,7 @@ Buffer&
 Buffer::operator<<(uint64_t i)
 {
     char num[64];
-    size_t len = snprintf(num, sizeof(num), "%"PRIu64, i);
+    size_t len = snprintf(num, sizeof(num), "%" PRIu64, i);
     _DoAppend(num, len);
     return *this;
 }
@@ -1542,7 +1542,7 @@ Buffer&
 Buffer::operator<<(int64_t i)
 {
     char num[64];
-    size_t len = snprintf(num, sizeof(num), "%"PRId64, i);
+    size_t len = snprintf(num, sizeof(num), "%" PRId64, i);
     _DoAppend(num, len);
     return *this;
 }

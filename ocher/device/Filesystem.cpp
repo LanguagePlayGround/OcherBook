@@ -165,7 +165,7 @@ Filesystem::~Filesystem()
 	delete m_libraries;
 }
 
-void Filesystem::initWatches()
+void Filesystem::initWatches(Options* options)
 {
 #ifdef __linux__
 	m_infd = inotify_init();
@@ -175,7 +175,7 @@ void Filesystem::initWatches()
 	}
 
 	for (int i = 0; ; ++i) {
-		const char* lib = opt.files[i]; //m_libraries[i];
+		const char* lib = options->files[i]; //m_libraries[i];
 		if (! lib)
 			break;
 		int wd = inotify_add_watch(m_infd, lib, IN_CREATE | IN_DELETE | IN_MOVED_FROM | IN_MOVED_TO);
