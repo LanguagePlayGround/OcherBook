@@ -1,16 +1,16 @@
 /*
  *	Delegate.h
- *  CoreGame
  *	Efficient delegates in C++ that generate only two lines of asm code
  *
  *	Created by Don Clugston.
  *	Contributions by Jody Hagins.
- *	http://www.codeproject.com/KB/cpp/FastDelegate.aspx
- *
  *	Tweaked by Patrick Hogan on 5/18/09.
+ *	http://www.codeproject.com/KB/cpp/FastDelegate.aspx
+ *  http://www.codeproject.com/Articles/7150/Member-Function-Pointers-and-the-Fastest-Possible
  *
- *	License: The Code Project Open License (CPOL)
- *	http://www.codeproject.com/info/cpol10.aspx
+ *	License:
+ *	As stated explicitly in the article linked above, this code is released into the public domain
+ *	and may be used for any purpose.
  *
  */
 
@@ -65,7 +65,7 @@
 //
 // 19-May-09 1.5a Patrick Hogan:
 //				  * Bundled with Signals.h for signals and slots library
-//				  * Changed namespace to "gallant"
+//				  * Changed namespace to "Gallant"
 
 #ifndef _Delegate_H_
 #define _Delegate_H_
@@ -73,16 +73,6 @@
 #if _MSC_VER > 1000
 	#pragma once
 #endif // _MSC_VER > 1000
-
-#if __cplusplus < 201103L
-#define static_assert(cond, msg) \
-	do { \
-		(void)msg; \
-		struct __staticAssertStruct__ { \
-			char __static_assert_failed__[(cond) ? 1 : -1]; \
-		}; \
-	} while (0)
-#endif
 
 #include <memory.h> // to allow <,> comparisons
 
@@ -209,8 +199,8 @@ inline OutputClass horrible_cast(const InputClass input){
 	// Cause a compile-time error if in, out and u are not the same size.
 	// If the compile fails here, it means the compiler has peculiar
 	// unions which would prevent the cast from working.
-	static_assert(sizeof(InputClass)==sizeof(u)
-		&& sizeof(InputClass)==sizeof(OutputClass), "CantUseHorribleCast");
+	typedef int ERROR_CantUseHorrible_cast[sizeof(InputClass)==sizeof(u)
+		&& sizeof(InputClass)==sizeof(OutputClass) ? 1 : -1];
 	u.in = input;
 	return u.out;
 }
@@ -322,10 +312,11 @@ const int SINGLE_MEMFUNCPTR_SIZE = sizeof(void (GenericClass::*)());
 template <int N>
 struct SimplifyMemFunc {
 	template <class X, class XFuncType, class GenericMemFuncType>
-	inline static GenericClass *Convert(X * /*pthis*/, XFuncType /*function_to_bind*/,
-		GenericMemFuncType &/*bound_func*/) {
+	inline static GenericClass *Convert(X *pthis, XFuncType function_to_bind,
+		GenericMemFuncType &bound_func) {
 		// Unsupported member function type -- force a compile failure.
-		static_assert(N-100>=0, "Unsupported_member_function_pointer_on_this_compiler");
+		// (it's illegal to have a array with negative size).
+		typedef char ERROR_Unsupported_member_function_pointer_on_this_compiler[N-100];
 		return 0;
 	}
 };
@@ -789,7 +780,7 @@ public:
 // support static_cast between void * and function pointers.
 
 	template< class DerivedClass >
-	inline void CopyFrom (DerivedClass * /*pParent*/, const DelegateMemento &right) {
+	inline void CopyFrom (DerivedClass *pParent, const DelegateMemento &right) {
 		SetMementoFrom(right);
 	}
 	// For static functions, the 'static_function_invoker' class in the parent
@@ -811,7 +802,7 @@ public:
 		// Ensure that there's a compilation failure if function pointers
 		// and data pointers have different sizes.
 		// If you get this error, you need to #undef FASTDELEGATE_USESTATICFUNCTIONHACK.
-		static_assert(sizeof(GenericClass *)==sizeof(function_to_bind), "CantUseEvilMethod");
+		typedef int ERROR_CantUseEvilMethod[sizeof(GenericClass *)==sizeof(function_to_bind) ? 1 : -1];
 		m_pthis = horrible_cast<GenericClass *>(function_to_bind);
 		// MSVC, SunC++ and DMC accept the following (non-standard) code:
 //		m_pthis = static_cast<GenericClass *>(static_cast<void *>(function_to_bind));
@@ -826,7 +817,7 @@ public:
 		// Ensure that there's a compilation failure if function pointers
 		// and data pointers have different sizes.
 		// If you get this error, you need to #undef FASTDELEGATE_USESTATICFUNCTIONHACK.
-		static_assert(sizeof(UnvoidStaticFuncPtr)==sizeof(this), "CantUseEvilMethod");
+		typedef int ERROR_CantUseEvilMethod[sizeof(UnvoidStaticFuncPtr)==sizeof(this) ? 1 : -1];
 		return horrible_cast<UnvoidStaticFuncPtr>(this);
 	}
 #endif // !defined(FASTDELEGATE_USESTATICFUNCTIONHACK)
