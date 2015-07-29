@@ -8,6 +8,8 @@
 
 #include "ocher/ux/Controller.h"
 
+#include "clc/data/Buffer.h"
+
 /**
  */
 class UxControllerFd : public UxController

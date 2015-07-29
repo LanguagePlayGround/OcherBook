@@ -29,6 +29,7 @@ list(APPEND LIB_SOURCES
 	#ux/fd/BrowseFd.cpp
 	#ux/fd/FactoryFd.cpp
 	#ux/fd/RendererFd.cpp
+	ux/fd/UxControllerFd.cpp
 	Container.cpp
 	device/Battery.cpp
 	device/Device.cpp
@@ -140,7 +141,7 @@ target_link_libraries(ocherbook
 	pthread
 	bz2  # TODO freetype (may!) want this
 	)
-if(OCHER_FMT_EPUB)
+if(FALSE AND OCHER_FMT_EPUB)
 	target_link_libraries(ocherbook
 		hubbub
 		#css
