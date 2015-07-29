@@ -1,9 +1,8 @@
 *.o
 *.d
 *.a
-arm-2010q1
 doc/OcherBook/
 build/
 ocher/test/books/
 .svn
-
+.hg
